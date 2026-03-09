@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = "light-game-space-v1";
+﻿const CACHE_NAME = "light-game-space-v2";
 const ASSETS = [
   "./",
   "./index.html",
@@ -37,3 +37,4 @@ self.addEventListener("fetch", (event) => {
     })
   );
 });
+
