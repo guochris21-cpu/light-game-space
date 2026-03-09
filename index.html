@@ -1,0 +1,48 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#1d3557" />
+  <title>轻游空间 - 随时可玩的网页小游戏</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <h1>轻游空间</h1>
+      <p>类似 4399 的轻量小游戏站 | 低网速可用 | 手机/平板/电脑都能玩</p>
+      <div class="status-row">
+        <span id="onlineBadge" class="badge">网络检测中...</span>
+        <span id="netMode" class="badge badge-alt">模式检测中...</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="catalog">
+      <div class="section-head">
+        <h2>游戏大厅</h2>
+        <p>点卡片即可开始</p>
+      </div>
+      <div id="gameGrid" class="game-grid"></div>
+    </section>
+
+    <section class="playground">
+      <div class="section-head">
+        <h2 id="activeTitle">请选择一个游戏</h2>
+        <p id="activeDesc">支持触屏和键盘操作</p>
+      </div>
+      <div id="gameHost" class="game-host"></div>
+      <div id="controls" class="controls"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>本地离线可玩，首次加载后即缓存核心资源。</p>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

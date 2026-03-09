@@ -1,0 +1,9 @@
+﻿{
+  "name": "轻游空间",
+  "short_name": "轻游",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f2f7ff",
+  "theme_color": "#1d3557",
+  "icons": []
+}

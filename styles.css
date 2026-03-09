@@ -1,0 +1,202 @@
+﻿:root {
+  --bg: #f2f7ff;
+  --panel: #ffffff;
+  --ink: #0f172a;
+  --muted: #4b5563;
+  --brand: #1d3557;
+  --accent: #e76f51;
+  --ok: #198754;
+  --warn: #b45309;
+  --radius: 16px;
+  --shadow: 0 10px 30px rgba(15, 23, 42, 0.1);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: var(--ink);
+  background: radial-gradient(circle at top right, #dff2ff, #eef6ff 40%, #f6f9ff 80%);
+  min-height: 100vh;
+}
+
+.hero {
+  background: linear-gradient(120deg, #1d3557, #2a9d8f);
+  color: #fff;
+  padding: 26px 18px;
+}
+
+.hero-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+}
+
+.hero p {
+  margin: 8px 0 0;
+  opacity: 0.92;
+}
+
+.status-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.badge {
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+}
+
+.badge-alt {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.container {
+  max-width: 1100px;
+  margin: 16px auto;
+  padding: 0 14px 22px;
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 14px;
+}
+
+.section-head h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.section-head p {
+  margin: 4px 0 10px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.catalog,
+.playground {
+  background: var(--panel);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 14px;
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.card {
+  background: #f8fbff;
+  border: 1px solid #dae8ff;
+  border-radius: 14px;
+  padding: 12px;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+
+.card:hover,
+.card.active {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(42, 157, 143, .2);
+  border-color: #74c0aa;
+}
+
+.card h3 {
+  margin: 0 0 4px;
+}
+
+.card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+.game-host {
+  min-height: 360px;
+  display: grid;
+  place-items: center;
+  border: 2px dashed #c8d8ef;
+  border-radius: 14px;
+  background: #f8fbff;
+  overflow: hidden;
+  position: relative;
+}
+
+canvas {
+  width: min(95vw, 560px);
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  background: #0b1320;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.controls button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: var(--brand);
+  color: #fff;
+  cursor: pointer;
+}
+
+.controls button.alt {
+  background: var(--accent);
+}
+
+.board-2048 {
+  width: min(95vw, 520px);
+  aspect-ratio: 1 / 1;
+  background: #bbada0;
+  border-radius: 12px;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.tile {
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: clamp(1rem, 3vw, 2rem);
+  background: rgba(238, 228, 218, 0.35);
+  color: #3c3a32;
+}
+
+.footer {
+  text-align: center;
+  color: var(--muted);
+  padding: 10px 14px 22px;
+}
+
+.low-bandwidth .hero {
+  background: #1d3557;
+}
+
+@media (max-width: 900px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .game-host {
+    min-height: 320px;
+  }
+}
