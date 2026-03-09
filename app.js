@@ -57,6 +57,17 @@ function clearGame() {
   metaBar.textContent = "";
 }
 
+function paintTexture(x,w,h,a,b){
+  const g=x.createLinearGradient(0,0,0,h);
+  g.addColorStop(0,a);
+  g.addColorStop(1,b);
+  x.fillStyle=g;
+  x.fillRect(0,0,w,h);
+  x.fillStyle="rgba(255,255,255,0.035)";
+  for(let i=-h;i<w+h;i+=8){ x.fillRect(i,0,1,h); }
+  x.fillStyle="rgba(255,255,255,0.03)";
+  for(let y=0;y<h;y+=22){ x.fillRect(0,y,w,1); }
+}
 function drawOverlay(x, w, h, msg) {
   x.fillStyle = "rgba(0,0,0,.5)";
   x.fillRect(0, 0, w, h);
@@ -83,7 +94,7 @@ function mountFireIce() {
     step(r,down.a,down.d,jr); step(b,down.l,down.r,jb);
     if(hit(r,water)||hit(b,lava)||r.y>420||b.y>420){ r=mk(100,340,"#ff6b6b"); b=mk(160,340,"#59bfff"); }
     r.done=hit(r,goalR); b.done=hit(b,goalB);
-    x.fillStyle="#091127"; x.fillRect(0,0,760,420);
+    paintTexture(x,760,420,"#091127","#061327");
     x.fillStyle="#f39c33"; x.fillRect(lava.x,lava.y,lava.w,lava.h);
     x.fillStyle="#3b91ff"; x.fillRect(water.x,water.y,water.w,water.h);
     x.fillStyle="#8ea6d9"; floors.forEach(f=>x.fillRect(f.x,f.y,f.w,f.h));
@@ -106,7 +117,7 @@ function mountSnake() {
     const h={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
     if(h.x<0||h.y<0||h.x>=20||h.y>=20||snake.some(s=>s.x===h.x&&s.y===h.y)){ drawOverlay(x,640,640,`结束 ${score}`); clearInterval(timer); return; }
     snake.unshift(h); if(h.x===food.x&&h.y===food.y){ score+=10; food={x:rand(0,19),y:rand(0,19)}; } else snake.pop();
-    x.fillStyle="#020917"; x.fillRect(0,0,640,640); x.fillStyle="#ff5d73"; x.fillRect(food.x*32,food.y*32,30,30); x.fillStyle="#43d9b8"; snake.forEach(s=>x.fillRect(s.x*32,s.y*32,30,30));
+    paintTexture(x,640,640,"#020917","#07162f"); x.fillStyle="#ff5d73"; x.fillRect(food.x*32,food.y*32,30,30); x.fillStyle="#43d9b8"; snake.forEach(s=>x.fillRect(s.x*32,s.y*32,30,30));
     x.fillStyle="#d4e6ff"; x.font="20px Segoe UI"; x.fillText(`分数 ${score}`,12,28);
   },120);
   return ()=>{ clearInterval(timer); off(); };
@@ -118,7 +129,7 @@ function mountRunner() {
   const off=bindKeys({" ":()=>jump(),Spacebar:()=>jump()}); c.addEventListener("pointerdown",jump);
   addControl("跳跃",jump); addControl("重开",()=>startGame("runner"),true);
   const loop=()=>{ if(over){ drawOverlay(x,760,360,`结束 ${score}`); return; } vy+=0.65; y=Math.min(280,y+vy); if(y===280)vy=0; ob-=speed; if(ob<-30){ob=760+rand(80,220); speed+=0.1; score++;}
-    if(ob<138&&ob+26>110&&y+30>276)over=true; x.fillStyle="#081326"; x.fillRect(0,0,760,360); x.fillStyle="#132949"; x.fillRect(0,310,760,50); x.fillStyle="#ffd166"; x.fillRect(110,y,28,30); x.fillStyle="#ff5d73"; x.fillRect(ob,276,26,34); x.fillStyle="#d3e5ff"; x.font="20px Segoe UI"; x.fillText(`分数 ${score}`,14,30); raf=requestAnimationFrame(loop); };
+    if(ob<138&&ob+26>110&&y+30>276)over=true; paintTexture(x,760,360,"#081326","#0c1f3d"); x.fillStyle="#132949"; x.fillRect(0,310,760,50); x.fillStyle="#ffd166"; x.fillRect(110,y,28,30); x.fillStyle="#ff5d73"; x.fillRect(ob,276,26,34); x.fillStyle="#d3e5ff"; x.font="20px Segoe UI"; x.fillText(`分数 ${score}`,14,30); raf=requestAnimationFrame(loop); };
   loop(); return ()=>{ cancelAnimationFrame(raf); off(); };
 }
 
@@ -126,7 +137,7 @@ function mountFlappy() {
   const c=createCanvas(760,420),x=c.getContext("2d"); setMeta("点击/空格上升穿管道");
   let y=200,vy=0,pipes=[{x:760,gap:180},{x:1120,gap:230}],score=0,over=false,raf=0; const flap=()=>vy=-7;
   const off=bindKeys({" ":()=>flap(),Spacebar:()=>flap()}); c.addEventListener("pointerdown",flap); addControl("拍翼",flap); addControl("重开",()=>startGame("flappy"),true);
-  const loop=()=>{ if(over){ drawOverlay(x,760,420,`结束 ${score}`); return; } vy+=0.45; y+=vy; x.fillStyle="#081427"; x.fillRect(0,0,760,420); x.fillStyle="#6dd3ff"; x.fillRect(120,y,30,24);
+  const loop=()=>{ if(over){ drawOverlay(x,760,420,`结束 ${score}`); return; } vy+=0.45; y+=vy; paintTexture(x,760,420,"#081427","#0b1f3b"); x.fillStyle="#6dd3ff"; x.fillRect(120,y,30,24);
     pipes.forEach(p=>{ p.x-=3.4; x.fillStyle="#2dcf8f"; x.fillRect(p.x,0,70,p.gap-70); x.fillRect(p.x,p.gap+90,70,420-p.gap-90); if(p.x+70<0){ p.x=860; p.gap=rand(140,260); score++; } if(150>p.x&&120<p.x+70&&(y<p.gap-70||y+24>p.gap+90))over=true; });
     if(y<0||y+24>420)over=true; x.fillStyle="#d6e5ff"; x.font="22px Segoe UI"; x.fillText(`分数 ${score}`,14,30); raf=requestAnimationFrame(loop); };
   loop(); return ()=>{ cancelAnimationFrame(raf); off(); };
@@ -138,7 +149,7 @@ function mountPong() {
   addControl("上",()=>p1-=24); addControl("下",()=>p1+=24); addControl("重开",()=>startGame("pong"),true);
   const loop=()=>{ p1+=down.w?-5:down.s?5:0; p1=clamp(p1,0,340); p2+=(by-(p2+40))*0.08; p2=clamp(p2,0,340); bx+=vx; by+=vy; if(by<0||by>420)vy*=-1;
     if(bx<30&&by>p1&&by<p1+80)vx=Math.abs(vx)+.14; if(bx>730&&by>p2&&by<p2+80)vx=-Math.abs(vx)-.14; if(bx<0){s2++; bx=380;by=210;vx=4;vy=rand(-3,3);} if(bx>760){s1++; bx=380;by=210;vx=-4;vy=rand(-3,3);} 
-    x.fillStyle="#050d1d"; x.fillRect(0,0,760,420); x.fillStyle="#2b4d8a"; for(let i=0;i<420;i+=24)x.fillRect(378,i,4,14); x.fillStyle="#4dd4ff"; x.fillRect(12,p1,14,80); x.fillStyle="#ff8d59"; x.fillRect(734,p2,14,80); x.fillStyle="#fff"; x.beginPath(); x.arc(bx,by,9,0,Math.PI*2); x.fill(); x.font="28px Segoe UI"; x.fillText(`${s1}:${s2}`,356,40);
+    paintTexture(x,760,420,"#050d1d","#0b1b37"); x.fillStyle="#2b4d8a"; for(let i=0;i<420;i+=24)x.fillRect(378,i,4,14); x.fillStyle="#4dd4ff"; x.fillRect(12,p1,14,80); x.fillStyle="#ff8d59"; x.fillRect(734,p2,14,80); x.fillStyle="#fff"; x.beginPath(); x.arc(bx,by,9,0,Math.PI*2); x.fill(); x.font="28px Segoe UI"; x.fillText(`${s1}:${s2}`,356,40);
     raf=requestAnimationFrame(loop); }; loop(); return ()=>{ cancelAnimationFrame(raf); off(); };
 }
 
@@ -148,7 +159,7 @@ function mountBreakout(){
   const off=bindKeys({ArrowLeft:v=>down.l=v,ArrowRight:v=>down.r=v}); addControl("左",()=>p-=24); addControl("右",()=>p+=24); addControl("重开",()=>startGame("breakout"),true);
   const loop=()=>{ p+=down.l?-7:down.r?7:0; p=clamp(p,0,640); bx+=vx; by+=vy; if(bx<8||bx>752)vx*=-1; if(by<8)vy*=-1; if(by>460){drawOverlay(x,760,460,`失败 ${score}`); return;} if(by>424&&bx>p&&bx<p+120){vy=-Math.abs(vy); vx+=(bx-p-60)*.03;}
     for(const b of bricks){ if(b.hp&&bx>b.x&&bx<b.x+b.w&&by>b.y&&by<b.y+b.h){b.hp=0;vy*=-1;score+=10;break;} } if(!bricks.some(b=>b.hp)){drawOverlay(x,760,460,`清屏 ${score}`); return;}
-    x.fillStyle="#050d1d"; x.fillRect(0,0,760,460); bricks.forEach(b=>{if(b.hp){x.fillStyle=`hsl(${(b.x+b.y)%360} 90% 60%)`;x.fillRect(b.x,b.y,b.w,b.h);}}); x.fillStyle="#4cc9f0";x.fillRect(p,434,120,12);x.fillStyle="#fff";x.beginPath();x.arc(bx,by,8,0,Math.PI*2);x.fill();x.fillStyle="#d8e5ff";x.font="20px Segoe UI";x.fillText(`得分 ${score}`,14,28);
+    paintTexture(x,760,460,"#050d1d","#0b1b37"); bricks.forEach(b=>{if(b.hp){x.fillStyle=`hsl(${(b.x+b.y)%360} 90% 60%)`;x.fillRect(b.x,b.y,b.w,b.h);}}); x.fillStyle="#4cc9f0";x.fillRect(p,434,120,12);x.fillStyle="#fff";x.beginPath();x.arc(bx,by,8,0,Math.PI*2);x.fill();x.fillStyle="#d8e5ff";x.font="20px Segoe UI";x.fillText(`得分 ${score}`,14,28);
     raf=requestAnimationFrame(loop); }; loop(); return ()=>{cancelAnimationFrame(raf);off();};
 }
 
@@ -160,7 +171,7 @@ function mountShooter(){
   const end=(m)=>{ended=true;drawOverlay(x,760,480,m);};
   const loop=()=>{ if(ended)return; px+=down.l?-5:down.r?5:0; px=clamp(px,0,728); const live=enemies.filter(e=>e.alive); if(!live.length){end(`胜利 ${score}`);return;} const minX=Math.min(...live.map(e=>e.x)),maxX=Math.max(...live.map(e=>e.x)); if(maxX>730||minX<20){dir*=-1;live.forEach(e=>e.y+=18);} live.forEach(e=>{e.x+=dir*.8;if(e.y>410)end("敌机压境");}); bullets.forEach(b=>b.y+=b.vy);
     for(const b of bullets)for(const e of live){ if(e.alive&&b.x>e.x&&b.x<e.x+28&&b.y>e.y&&b.y<e.y+24){e.alive=false;b.y=-20;score+=12;} }
-    x.fillStyle="#050d1d";x.fillRect(0,0,760,480);x.fillStyle="#50fa7b";x.fillRect(px,442,34,20);x.fillStyle="#7ec8ff";live.forEach(e=>x.fillRect(e.x,e.y,28,22));x.fillStyle="#ffdf6e";bullets.forEach(b=>x.fillRect(b.x,b.y,4,12));x.fillStyle="#d8e5ff";x.font="20px Segoe UI";x.fillText(`得分 ${score}`,14,28);
+    paintTexture(x,760,480,"#050d1d","#0a1a34");x.fillStyle="#50fa7b";x.fillRect(px,442,34,20);x.fillStyle="#7ec8ff";live.forEach(e=>x.fillRect(e.x,e.y,28,22));x.fillStyle="#ffdf6e";bullets.forEach(b=>x.fillRect(b.x,b.y,4,12));x.fillStyle="#d8e5ff";x.font="20px Segoe UI";x.fillText(`得分 ${score}`,14,28);
     raf=requestAnimationFrame(loop); }; loop(); return ()=>{cancelAnimationFrame(raf);off();};
 }
 
@@ -170,7 +181,7 @@ function mountDodge(){
   addControl("左",()=>px-=24); addControl("右",()=>px+=24); addControl("重开",()=>startGame("dodge"),true);
   const loop=()=>{ t++; px+=down.l?-6:down.r?6:0; px=clamp(px,0,730); if(t%20===0)rocks.push({x:rand(0,740),y:-10,vy:2+Math.random()*3,s:rand(10,20)}); rocks.forEach(r=>r.y+=r.vy); score+=.15;
     const hit=rocks.some(r=>Math.abs((r.x+r.s/2)-(px+15))<r.s&&Math.abs((r.y+r.s/2)-390)<r.s);
-    x.fillStyle="#061328";x.fillRect(0,0,760,420);x.fillStyle="#24487d";x.fillRect(0,400,760,20);x.fillStyle="#76e4ff";x.fillRect(px,376,30,24);x.fillStyle="#ff9966";rocks.forEach(r=>x.fillRect(r.x,r.y,r.s,r.s));x.fillStyle="#d5e6ff";x.font="20px Segoe UI";x.fillText(`生存分 ${Math.floor(score)}`,14,28);
+    paintTexture(x,760,420,"#061328","#0d2346");x.fillStyle="#24487d";x.fillRect(0,400,760,20);x.fillStyle="#76e4ff";x.fillRect(px,376,30,24);x.fillStyle="#ff9966";rocks.forEach(r=>x.fillRect(r.x,r.y,r.s,r.s));x.fillStyle="#d5e6ff";x.font="20px Segoe UI";x.fillText(`生存分 ${Math.floor(score)}`,14,28);
     if(hit){drawOverlay(x,760,420,`被击中 ${Math.floor(score)}`);return;} raf=requestAnimationFrame(loop);
   }; loop(); return ()=>{cancelAnimationFrame(raf);off();};
 }
@@ -205,7 +216,7 @@ function mountMemory(){ setMeta("翻两张牌，找出全部配对"); return mou
 function mountSimon(){ setMeta("记住闪烁顺序并复现"); return mountSimpleBoard((box,info)=>{const pads=document.createElement("div");pads.className="ui-grid";pads.style.gridTemplateColumns="repeat(2,1fr)";box.appendChild(pads); const cs=["#ff6b6b","#ffd166","#4cc9f0","#95d36f"],nodes=[],seq=[];let idx=0,ready=false; const bl=i=>{nodes[i].style.opacity="1";setTimeout(()=>nodes[i].style.opacity=".65",260);}; const nx=()=>{ready=false;idx=0;seq.push(rand(0,3));info.textContent=`第 ${seq.length} 轮`;seq.forEach((v,i)=>setTimeout(()=>bl(v),380*(i+1)));setTimeout(()=>ready=true,380*(seq.length+1));}; const tp=i=>{if(!ready)return;bl(i);if(i!==seq[idx]){info.textContent=`失败 最高 ${seq.length-1} 轮`;ready=false;return;}idx++;if(idx===seq.length)setTimeout(nx,600);}; for(let i=0;i<4;i++){const bt=document.createElement("button");bt.className="cell-btn";bt.style.minHeight="100px";bt.style.background=cs[i];bt.style.opacity=".65";bt.onclick=()=>tp(i);nodes.push(bt);pads.appendChild(bt);} addControl("开始",()=>{seq.length=0;nx();}); addControl("重开",()=>startGame("simon"),true); info.textContent="点击开始"; return ()=>{}; }); }
 function mountWhack(){ setMeta("30秒限时打地鼠"); return mountSimpleBoard((box,info)=>{const g=document.createElement("div");g.className="ui-grid";g.style.gridTemplateColumns="repeat(3,1fr)";box.appendChild(g); const cells=Array.from({length:9},()=>document.createElement("button"));cells.forEach(b=>{b.className="cell-btn";b.style.minHeight="72px";g.appendChild(b);}); let s=0,l=30,idx=-1,t1=null,t2=null; const re=()=>{info.textContent=`分数 ${s} | ${l}s`;cells.forEach((b,i)=>{b.textContent=i===idx?"🐹":"";b.onclick=()=>{if(i===idx){s++;idx=-1;re();}};});}; const st=()=>{clearInterval(t1);clearInterval(t2);s=0;l=30;t1=setInterval(()=>{idx=rand(0,8);re();},550);t2=setInterval(()=>{l--;if(l<=0){clearInterval(t1);clearInterval(t2);idx=-1;info.textContent=`结束 总分 ${s}`;}else re();},1000);re();}; addControl("开始",st);addControl("重开",()=>startGame("whack"),true);re();return ()=>{clearInterval(t1);clearInterval(t2);}; }); }
 function mountFlood(){ setMeta("选颜色统一棋盘"); return mountSimpleBoard((box,info)=>{const bd=document.createElement("div");bd.className="ui-grid";bd.style.gridTemplateColumns="repeat(10,1fr)";const bar=document.createElement("div");bar.className="controls";box.append(bd,bar); const p=["#ff6b6b","#ffd166","#4cc9f0","#95d36f","#c38bff","#ff9f68"]; let b=Array.from({length:10},()=>Array.from({length:10},()=>rand(0,p.length-1))),step=0; const fl=t=>{const f=b[0][0];if(f===t)return;const q=[[0,0]],s=new Set(["0,0"]);while(q.length){const [r,c]=q.shift();if(b[r][c]!==f)continue;b[r][c]=t;[[1,0],[-1,0],[0,1],[0,-1]].forEach(d=>{const nr=r+d[0],nc=c+d[1],k=`${nr},${nc}`;if(nr>=0&&nr<10&&nc>=0&&nc<10&&!s.has(k)){s.add(k);q.push([nr,nc]);}});}step++;re();}; const re=()=>{bd.innerHTML="";b.flat().forEach(v=>{const d=document.createElement("button");d.className="cell-btn";d.style.minHeight="24px";d.style.background=p[v];bd.appendChild(d);});bar.innerHTML="";p.forEach((c,i)=>{const bt=document.createElement("button");bt.style.background=c;bt.textContent=String(i+1);bt.onclick=()=>fl(i);bar.appendChild(bt);});const done=b.flat().every(v=>v===b[0][0]);info.textContent=done?`完成 共${step}步`:`步数 ${step}`;}; addControl("重开",()=>startGame("flood"),true); re(); return ()=>{}; }); }
-function mountMaze(){ const c=createCanvas(640,640),x=c.getContext("2d"); setMeta("方向键移动到右下终点"); const N=16,cell=40,w=Array.from({length:N},()=>Array(N).fill(0)); for(let r=0;r<N;r++)for(let c1=0;c1<N;c1++)if(Math.random()<.24)w[r][c1]=1; w[0][0]=0; w[N-1][N-1]=0; let p={r:0,c:0},st=Date.now(); const dr=()=>{x.fillStyle="#081326";x.fillRect(0,0,640,640);for(let r=0;r<N;r++)for(let c1=0;c1<N;c1++){x.fillStyle=w[r][c1]?"#26497f":"#0f1f3f";x.fillRect(c1*cell,r*cell,cell-1,cell-1);}x.fillStyle="#4dffae";x.fillRect((N-1)*cell+8,(N-1)*cell+8,24,24);x.fillStyle="#ffd166";x.fillRect(p.c*cell+8,p.r*cell+8,24,24);if(p.r===N-1&&p.c===N-1)drawOverlay(x,640,640,`通关 ${((Date.now()-st)/1000).toFixed(1)}s`);}; const mv=(dr1,dc1)=>{const nr=p.r+dr1,nc=p.c+dc1;if(nr<0||nr>=N||nc<0||nc>=N||w[nr][nc])return;p={r:nr,c:nc};dr();}; const off=bindKeys({ArrowUp:()=>mv(-1,0),ArrowDown:()=>mv(1,0),ArrowLeft:()=>mv(0,-1),ArrowRight:()=>mv(0,1)}); [["上",-1,0],["下",1,0],["左",0,-1],["右",0,1]].forEach(k=>addControl(k[0],()=>mv(k[1],k[2]))); addControl("重开",()=>startGame("maze"),true); dr(); return ()=>off(); }
+function mountMaze(){ const c=createCanvas(640,640),x=c.getContext("2d"); setMeta("方向键移动到右下终点"); const N=16,cell=40,w=Array.from({length:N},()=>Array(N).fill(0)); for(let r=0;r<N;r++)for(let c1=0;c1<N;c1++)if(Math.random()<.24)w[r][c1]=1; w[0][0]=0; w[N-1][N-1]=0; let p={r:0,c:0},st=Date.now(); const dr=()=>{paintTexture(x,640,640,"#081326","#0e2348");for(let r=0;r<N;r++)for(let c1=0;c1<N;c1++){x.fillStyle=w[r][c1]?"#26497f":"#0f1f3f";x.fillRect(c1*cell,r*cell,cell-1,cell-1);}x.fillStyle="#4dffae";x.fillRect((N-1)*cell+8,(N-1)*cell+8,24,24);x.fillStyle="#ffd166";x.fillRect(p.c*cell+8,p.r*cell+8,24,24);if(p.r===N-1&&p.c===N-1)drawOverlay(x,640,640,`通关 ${((Date.now()-st)/1000).toFixed(1)}s`);}; const mv=(dr1,dc1)=>{const nr=p.r+dr1,nc=p.c+dc1;if(nr<0||nr>=N||nc<0||nc>=N||w[nr][nc])return;p={r:nr,c:nc};dr();}; const off=bindKeys({ArrowUp:()=>mv(-1,0),ArrowDown:()=>mv(1,0),ArrowLeft:()=>mv(0,-1),ArrowRight:()=>mv(0,1)}); [["上",-1,0],["下",1,0],["左",0,-1],["右",0,1]].forEach(k=>addControl(k[0],()=>mv(k[1],k[2]))); addControl("重开",()=>startGame("maze"),true); dr(); return ()=>off(); }
 function mountSliding(){ setMeta("把数字按1-8复原"); return mountSimpleBoard((box,info)=>{const g=document.createElement("div");g.className="ui-grid";g.style.gridTemplateColumns="repeat(3,1fr)";box.appendChild(g); let a=[1,2,3,4,5,6,7,8,0]; for(let i=0;i<70;i++){const z=a.indexOf(0),r=Math.floor(z/3),c=z%3,o=[[1,0],[-1,0],[0,1],[0,-1]].map(d=>[r+d[0],c+d[1]]).filter(p=>p[0]>=0&&p[0]<3&&p[1]>=0&&p[1]<3),q=o[rand(0,o.length-1)],ni=q[0]*3+q[1];[a[z],a[ni]]=[a[ni],a[z]];} const win=()=>a.join(",")==="1,2,3,4,5,6,7,8,0"; const ck=i=>{const z=a.indexOf(0),r1=Math.floor(i/3),c1=i%3,r2=Math.floor(z/3),c2=z%3;if(Math.abs(r1-r2)+Math.abs(c1-c2)!==1)return;[a[i],a[z]]=[a[z],a[i]];re();}; const re=()=>{g.innerHTML="";a.forEach((v,i)=>{const bt=document.createElement("button");bt.className="cell-btn";bt.style.minHeight="74px";bt.style.background=v?"#17305a":"#0d1d37";bt.textContent=v||"";bt.onclick=()=>ck(i);g.appendChild(bt);});info.textContent=win()?"已复原":"点击相邻格移动";}; addControl("重开",()=>startGame("slide"),true); re(); return ()=>{}; }); }
 function mountMathSprint(){ setMeta("45秒内尽量多答对"); return mountSimpleBoard((box,info)=>{const q=document.createElement("div");q.className="info";q.style.fontSize="1.25rem";const inp=document.createElement("input");inp.className="search";inp.placeholder="输入答案回车";box.append(q,inp); let a=0,b=0,ans=0,op="+",s=0,l=45; const nq=()=>{a=rand(2,30);b=rand(2,30);op=["+","-","*"][rand(0,2)];ans=op==="+"?a+b:op==="-"?a-b:a*b;q.textContent=`${a} ${op} ${b} = ?`;inp.value="";inp.focus();}; const tm=setInterval(()=>{l--;info.textContent=`分数 ${s} | ${l}s`;if(l<=0){clearInterval(tm);inp.disabled=true;q.textContent=`时间到 总分 ${s}`;}},1000); inp.onkeydown=e=>{if(e.key!=="Enter"||inp.disabled)return;if(Number(inp.value.trim())===ans)s+=10;else s=Math.max(0,s-3);nq();info.textContent=`分数 ${s} | ${l}s`;}; addControl("重开",()=>startGame("math"),true); info.textContent=`分数 0 | ${l}s`; nq(); return ()=>clearInterval(tm); }); }
 function mountTypingRush(){ setMeta("限时打字"); return mountSimpleBoard((box,info)=>{const line=document.createElement("div");line.className="info";line.style.fontSize="1.1rem";const inp=document.createElement("input");inp.className="search";inp.placeholder="输入句子";box.append(line,inp); const arr=["speed makes skills stronger","practice builds confidence","tiny steps create big wins","focus and finish one thing","code play learn and repeat"]; let tar=arr[rand(0,arr.length-1)],l=40,d=0;line.textContent=tar; const tm=setInterval(()=>{l--;info.textContent=`完成 ${d} | ${l}s`;if(l<=0){clearInterval(tm);inp.disabled=true;line.textContent=`结束 完成 ${d} 句`;}},1000); inp.oninput=()=>{if(inp.value.trim()===tar){d++;tar=arr[rand(0,arr.length-1)];line.textContent=tar;inp.value="";info.textContent=`完成 ${d} | ${l}s`;}}; addControl("重开",()=>startGame("typing"),true); info.textContent=`完成 0 | ${l}s`; inp.focus(); return ()=>clearInterval(tm); }); }
@@ -229,4 +240,5 @@ function startGame(id){ const g=gameDefs.find(i=>i.id===id); if(!g)return; clear
 if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 searchInput.addEventListener("input",()=>{ state.query=searchInput.value; renderCatalog(); });
 setupNetworkAwareMode(); renderTags(); renderCatalog();
+
 
