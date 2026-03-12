@@ -27,6 +27,24 @@ body {
 .glow-b { width: 220px; height: 220px; left: 16%; top: -90px; background: #ff8c42; }
 h1 { margin: 0; font-size: clamp(1.7rem, 2.6vw, 2.5rem); }
 .hero p { margin: 8px 0 0; color: #d8e5ff; }
+.birthday-banner {
+  margin-bottom: 14px;
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: linear-gradient(120deg, #ff4d6d, #ff9e2c);
+  color: #fff;
+  font-size: clamp(1.2rem, 2.5vw, 2rem);
+  font-weight: 800;
+  letter-spacing: 1px;
+  box-shadow: 0 8px 22px rgba(255, 86, 86, 0.35);
+}
+.site-credit {
+  margin: 8px 0 0;
+  font-size: clamp(1rem, 1.8vw, 1.3rem);
+  color: #9dd8ff;
+  font-weight: 700;
+}
 
 .status-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
 .badge { border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 999px; padding: 6px 12px; background: rgba(255, 255, 255, 0.1); font-size: 0.9rem; }
