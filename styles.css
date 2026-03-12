@@ -41,7 +41,7 @@ h1 { margin: 0; font-size: clamp(1.7rem, 2.6vw, 2.5rem); }
 }
 .site-credit {
   margin: 8px 0 0;
-  font-size: clamp(1rem, 1.8vw, 1.3rem);
+  font-size: clamp(1.35rem, 3.2vw, 2.2rem);
   color: #9dd8ff;
   font-weight: 700;
 }
